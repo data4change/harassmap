@@ -1,17 +1,12 @@
+from common import table, table_category
+
 import langid
 from datetime import datetime
 import dateparser
 import unicodecsv
-import normality
-from collections import defaultdict
-from nltk.util import ngrams
-from nltk.stem.snowball import SnowballStemmer
 from pprint import pprint
-from common import table, table_category
 
 langid.set_languages(['en', 'ar'])
-PHRASES = defaultdict(int)
-stemmer = SnowballStemmer("english")
 
 
 def load_row(data):
@@ -30,17 +25,6 @@ def load_row(data):
     (lang, val) = langid.classify(desc)
     data['lang'] = lang
 
-    if lang == 'en':
-        tokens = normality.normalize(desc).split(' ')
-        # tokens = [stemmer.stem(t) for t in tokens]
-        # for i in [3, 4, 5, 6]:
-        for i in [4, 5, 6]:
-            for ngram in ngrams(tokens, i):
-                ngram = ' '.join(ngram)
-                PHRASES[ngram] += 1
-        # print tokens
-
-    return
     table.insert(data)
     categories = [c.strip() for c in data['category'].split(',')]
     for cat in categories:
@@ -53,10 +37,9 @@ def load_row(data):
 
 
 def load():
-    # print engine
     header = None
-    # table.delete()
-    # table_category.delete()
+    table.delete()
+    table_category.delete()
 
     with open('harrassmap.csv', 'r') as fh:
         for row in unicodecsv.reader(fh):
@@ -68,11 +51,16 @@ def load():
 
 
 def report_phrases():
-    phrases = PHRASES.items()
-    phrases = sorted(phrases, key=lambda (p, c): c, reverse=True)
-    for phrase, count in phrases[:100]:
-        if count > 1:
-            print phrase, count
+    with open('phrases.csv', 'w') as fh:
+        writer = unicodecsv.writer(fh)
+        writer.writerow(['phrase', 'ngram', 'count'])
+        phrases = PHRASES.items()
+        phrases = sorted(phrases, key=lambda (p, c): len(c), reverse=True)
+        for (phrase, plen), cases in phrases[:3000]:
+            if len(cases) > 1:
+                cases_text = ','.join(cases)
+                writer.writerow([phrase, str(plen), str(len(cases)), cases_text])
+                print phrase, len(cases)
 
 if __name__ == '__main__':
     load()

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>HarassMap Data Visualisation</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500" rel="stylesheet">
+	<style>
+		/*
+		hm-red: #ba1e43 
+		hm-blue: #228bbb
+		*/
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #ba1e43;
+			color: white;
+			font-family: 'Roboto', sans-serif;
+		}
+
+		h1 {
+			font-family: 'Roboto', sans-serif;
+			font-weight: 500;
+			letter-spacing: 0.05em;
+		}
+	</style>
+</head>
+<body>
+	<h1>Threads in the Stories</h1>
+
+	<div id='vis'></div>
+
+	<script src="node_modules/d3/build/d3.js"></script>
+	<script>
+		var e = document.documentElement,
+    		g = document.getElementsByTagName('body')[0],
+			margin = {top: 30, right: 10, bottom: 10, left: 10},
+			winWidth = window.innerWidth || e.clientWidth || g.clientWidth,
+    		winHeight = window.innerHeight|| e.clientHeight|| g.clientHeight,
+    		visWidth = winWidth,
+    		visHeight = winHeight * 0.9;
+
+    	var svg = d3.select("#vis").append("svg")
+    		.attr("width", visWidth)
+    		.attr("height", visHeight);
+
+		console.log('test loader', svg);
+	</script>
+</body>

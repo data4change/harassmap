@@ -1,3 +1,4 @@
 *.pyc
 .env
 .xlsx
+web/node_modules
