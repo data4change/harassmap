@@ -2,7 +2,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>HarassMap Threads in the Stories</title>
-  <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,700" rel="stylesheet">
 	<style>
 		/*
 		hm-red: #ba1e43 
@@ -33,15 +33,24 @@
     }
 
     .node.setting text {
+      /*
       fill: #006cb3;
+      */
+      font-weight: 300;
     }
 
     .node.incident text {
+      /*
       fill: #333;
+	  */
+	  font-weight: 400;
     }
 
     .node.reaction text {
+      /*
       fill: #b9204b;
+      */
+      font-weight: 700;
     }
 
     .link {
@@ -67,24 +76,24 @@
     		winHeight = window.innerHeight|| e.clientHeight|| g.clientHeight,
     		visWidth = winWidth,
     		visHeight = winHeight * 0.9,
-        marginWidth = visWidth * 0.1;
+        marginWidth = visWidth * 0.05;
 
     var themes = ['setting', 'incident', 'reaction'],
         themeLine = visHeight / 2,
-        themeUnit = (visWidth - (marginWidth * 2)) / 2;
+        themeUnit = (visWidth - (marginWidth * 7)) / 2;
 
   	var svg = d3.select("#vis").append("svg")
   		.attr("width", visWidth)
   		.attr("height", visHeight);
 
-    var fontScale = d3.scaleLinear()
-      .range([14, 24]);
+  	var opaScale = d3.scaleLinear()
+        .range([0.3, 1]);
 
     var simulation = d3.forceSimulation()
       .force("link", d3.forceLink())
-      .force("positionx", d3.forceX().strength(0.8).x(function(d) {
-        return marginWidth + themes.indexOf(d.theme) * themeUnit;
-      }))
+      // .force("positionx", d3.forceX().strength(0.8).x(function(d) {
+      //   return marginWidth + themes.indexOf(d.theme) * themeUnit;
+      // }))
       .force("positiony", d3.forceY().strength(0.1).y(function(d) {
         return themeLine;
       }))
@@ -93,10 +102,10 @@
     d3.json("graph.json", function(error, graph) {
       if (error) throw error;
       console.log(graph);
-      fontScale.domain(d3.extent(graph.nodes, function(n) {
-        n.count = n.cases ? n.cases.length : 0;
-        return n.count;
-      }));
+      // fontScale.domain(d3.extent(graph.nodes, function(n) {
+      //   n.count = n.cases ? n.cases.length : 0;
+      //   return n.count;
+      // }));
       
       var link = svg.append("g")
           .attr("class", "links")
@@ -126,18 +135,21 @@
             if (d.type == 'theme') {
               d.y = d.fy = themeLine;
               d.x = d.fx = marginWidth + themes.indexOf(d.id) * themeUnit;
+            } else {
+              d.x = d.fx = marginWidth + themes.indexOf(d.theme) * themeUnit;
             }
             return 'translate(' + [d.x, d.y] + ')';
           })
-          .style('font-size', function(d) {
-            return fontScale(d.count);
-          });
+          .style('font-size', '38px');
 
       node.append("text")
         .attr("class", "title")
-        .attr("text-anchor", "middle")
+        .attr("text-anchor", "left")
         .style("opacity", 0)
-        .text(function(d){ return d.label || d.id; })
+        .text(function(d) {
+        	var label = d.label || d.id;
+        	return label.toUpperCase();
+        })
         .transition().duration(2000)
         .style("opacity", 1);
 
