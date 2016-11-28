@@ -124,4 +124,3 @@ def report_phrases(phrases):
 
 if __name__ == '__main__':
     parse()
-

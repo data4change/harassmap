@@ -19,3 +19,14 @@ SELECT
   GROUP BY c.category
   ORDER BY COUNT(c.case_id) DESC;
 ```
+
+```sql
+SELECT
+	SUBSTR(COALESCE(h.date_of_incident, h.date), 1, 4) AS year,
+    c.category AS category,
+    COUNT(h.case_id) AS cases 
+  FROM harass h LEFT JOIN harass_category c ON c.case_id = h.case_id
+  GROUP BY 
+    c.category,
+    SUBSTR(COALESCE(h.date_of_incident, h.date), 1, 4);
+```

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
-	<title>HarassMap Data Visualisation</title>
+	<title>HarassMap Threads in the Stories</title>
   <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500" rel="stylesheet">
 	<style>
 		/*
@@ -28,20 +28,20 @@
     }
 
     .node.theme text {
-      fill: #eee;
+      fill: #ddd;
       font-size: 20px;
     }
 
     .node.setting text {
-      fill: #333;
+      fill: #006cb3;
     }
 
     .node.incident text {
-      fill: #b9204b;
+      fill: #333;
     }
 
     .node.reaction text {
-      fill: #ffc906;
+      fill: #b9204b;
     }
 
     .link {
@@ -78,7 +78,7 @@
   		.attr("height", visHeight);
 
     var fontScale = d3.scaleLinear()
-      .range([12, 20]);
+      .range([14, 24]);
 
     var simulation = d3.forceSimulation()
       .force("link", d3.forceLink())
@@ -170,6 +170,10 @@
       node.on('mouseout', function(d) {
         link.style('opacity', 0);
         node.style('opacity', 1);
+      });
+
+      node.on('click', function(d) {
+        console.log(d);
       });
 
       simulation
