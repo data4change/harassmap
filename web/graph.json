@@ -410,15 +410,16 @@
       "label": "group of young"
     }, 
     {
-      "id": "i was sitting", 
+      "id": "part of my body", 
       "cases": [
-        "1502", 
-        "2026", 
-        "488"
+        "256", 
+        "643", 
+        "955", 
+        "1856"
       ], 
       "type": "phrase", 
-      "theme": "setting", 
-      "label": "i was sitting"
+      "theme": "incident", 
+      "label": "part of my body"
     }, 
     {
       "id": "the streets of cairo", 
@@ -1096,30 +1097,6 @@
       "label": "i shouted back"
     }, 
     {
-      "id": "part of my body", 
-      "cases": [
-        "256", 
-        "643", 
-        "955", 
-        "1856"
-      ], 
-      "type": "phrase", 
-      "theme": "incident", 
-      "label": "part of my body"
-    }, 
-    {
-      "id": "was crossing the street", 
-      "cases": [
-        "31", 
-        "355", 
-        "1810", 
-        "1914"
-      ], 
-      "type": "phrase", 
-      "theme": "setting", 
-      "label": "was crossing the street"
-    }, 
-    {
       "id": "with my husband", 
       "cases": [
         "69", 
@@ -1250,13 +1227,13 @@
     {
       "source": 0, 
       "type": "common", 
-      "target": 73, 
+      "target": 71, 
       "weight": 1
     }, 
     {
       "source": 0, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
@@ -1297,19 +1274,13 @@
     {
       "source": 1, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
       "source": 2, 
       "type": "common", 
       "target": 55, 
-      "weight": 1
-    }, 
-    {
-      "source": 2, 
-      "type": "common", 
-      "target": 67, 
       "weight": 1
     }, 
     {
@@ -1386,13 +1357,13 @@
     {
       "source": 2, 
       "type": "common", 
-      "target": 71, 
+      "target": 69, 
       "weight": 1
     }, 
     {
       "source": 2, 
       "type": "common", 
-      "target": 72, 
+      "target": 70, 
       "weight": 1
     }, 
     {
@@ -1544,12 +1515,6 @@
     {
       "source": 7, 
       "type": "common", 
-      "target": 67, 
-      "weight": 1
-    }, 
-    {
-      "source": 7, 
-      "type": "common", 
       "target": 16, 
       "weight": 1
     }, 
@@ -1586,7 +1551,7 @@
     {
       "source": 7, 
       "type": "common", 
-      "target": 72, 
+      "target": 70, 
       "weight": 7
     }, 
     {
@@ -1657,7 +1622,7 @@
     {
       "source": 7, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
@@ -1722,7 +1687,7 @@
     {
       "source": 8, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
@@ -1798,12 +1763,6 @@
     {
       "source": 10, 
       "type": "common", 
-      "target": 26, 
-      "weight": 1
-    }, 
-    {
-      "source": 10, 
-      "type": "common", 
       "target": 48, 
       "weight": 1
     }, 
@@ -1822,7 +1781,7 @@
     {
       "source": 10, 
       "type": "common", 
-      "target": 71, 
+      "target": 69, 
       "weight": 1
     }, 
     {
@@ -1852,7 +1811,7 @@
     {
       "source": 11, 
       "type": "common", 
-      "target": 69, 
+      "target": 67, 
       "weight": 1
     }, 
     {
@@ -1888,12 +1847,6 @@
       "source": 12, 
       "type": "common", 
       "target": 65, 
-      "weight": 1
-    }, 
-    {
-      "source": 12, 
-      "type": "common", 
-      "target": 67, 
       "weight": 1
     }, 
     {
@@ -1956,19 +1909,13 @@
     }, 
     {
       "source": 14, 
-      "type": "common", 
-      "target": 67, 
-      "weight": 1
-    }, 
-    {
-      "source": 14, 
       "type": "theme", 
       "target": 32
     }, 
     {
       "source": 14, 
       "type": "common", 
-      "target": 70, 
+      "target": 68, 
       "weight": 2
     }, 
     {
@@ -2057,7 +2004,7 @@
     {
       "source": 15, 
       "type": "common", 
-      "target": 71, 
+      "target": 69, 
       "weight": 1
     }, 
     {
@@ -2092,7 +2039,7 @@
     {
       "source": 16, 
       "type": "common", 
-      "target": 72, 
+      "target": 70, 
       "weight": 1
     }, 
     {
@@ -2140,7 +2087,7 @@
     {
       "source": 17, 
       "type": "common", 
-      "target": 66, 
+      "target": 26, 
       "weight": 2
     }, 
     {
@@ -2227,7 +2174,7 @@
     {
       "source": 20, 
       "type": "common", 
-      "target": 73, 
+      "target": 71, 
       "weight": 1
     }, 
     {
@@ -2291,12 +2238,6 @@
     {
       "source": 22, 
       "type": "common", 
-      "target": 26, 
-      "weight": 1
-    }, 
-    {
-      "source": 22, 
-      "type": "common", 
       "target": 47, 
       "weight": 2
     }, 
@@ -2338,7 +2279,7 @@
     {
       "source": 23, 
       "type": "common", 
-      "target": 71, 
+      "target": 69, 
       "weight": 1
     }, 
     {
@@ -2420,19 +2361,31 @@
     {
       "source": 26, 
       "type": "common", 
-      "target": 55, 
-      "weight": 1
+      "target": 57, 
+      "weight": 2
+    }, 
+    {
+      "source": 26, 
+      "type": "common", 
+      "target": 61, 
+      "weight": 2
     }, 
     {
       "source": 26, 
       "type": "theme", 
-      "target": 32
+      "target": 39
     }, 
     {
-      "source": 27, 
+      "source": 26, 
       "type": "common", 
-      "target": 66, 
+      "target": 27, 
       "weight": 1
+    }, 
+    {
+      "source": 26, 
+      "type": "common", 
+      "target": 29, 
+      "weight": 2
     }, 
     {
       "source": 27, 
@@ -2442,7 +2395,7 @@
     {
       "source": 27, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
@@ -2502,12 +2455,6 @@
       "source": 29, 
       "type": "theme", 
       "target": 39
-    }, 
-    {
-      "source": 29, 
-      "type": "common", 
-      "target": 66, 
-      "weight": 2
     }, 
     {
       "source": 30, 
@@ -2571,7 +2518,7 @@
     {
       "source": 30, 
       "type": "common", 
-      "target": 73, 
+      "target": 71, 
       "weight": 1
     }, 
     {
@@ -2672,13 +2619,13 @@
     {
       "source": 31, 
       "type": "common", 
-      "target": 71, 
+      "target": 69, 
       "weight": 1
     }, 
     {
       "source": 31, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
@@ -2714,7 +2661,7 @@
     {
       "source": 32, 
       "type": "theme", 
-      "target": 70
+      "target": 68
     }, 
     {
       "source": 32, 
@@ -2734,12 +2681,7 @@
     {
       "source": 32, 
       "type": "theme", 
-      "target": 67
-    }, 
-    {
-      "source": 32, 
-      "type": "theme", 
-      "target": 68
+      "target": 66
     }, 
     {
       "source": 32, 
@@ -2749,7 +2691,7 @@
     {
       "source": 32, 
       "type": "theme", 
-      "target": 74
+      "target": 72
     }, 
     {
       "source": 33, 
@@ -2772,7 +2714,7 @@
     {
       "source": 33, 
       "type": "common", 
-      "target": 70, 
+      "target": 68, 
       "weight": 1
     }, 
     {
@@ -2801,19 +2743,19 @@
     {
       "source": 33, 
       "type": "common", 
-      "target": 68, 
+      "target": 66, 
       "weight": 1
     }, 
     {
       "source": 33, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
       "source": 33, 
       "type": "common", 
-      "target": 71, 
+      "target": 69, 
       "weight": 1
     }, 
     {
@@ -2924,7 +2866,7 @@
     {
       "source": 36, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
@@ -2960,7 +2902,7 @@
     {
       "source": 36, 
       "type": "common", 
-      "target": 71, 
+      "target": 69, 
       "weight": 1
     }, 
     {
@@ -3047,7 +2989,7 @@
     {
       "source": 39, 
       "type": "theme", 
-      "target": 69
+      "target": 67
     }, 
     {
       "source": 39, 
@@ -3062,12 +3004,7 @@
     {
       "source": 39, 
       "type": "theme", 
-      "target": 66
-    }, 
-    {
-      "source": 39, 
-      "type": "theme", 
-      "target": 72
+      "target": 70
     }, 
     {
       "source": 39, 
@@ -3087,7 +3024,7 @@
     {
       "source": 39, 
       "type": "theme", 
-      "target": 73
+      "target": 71
     }, 
     {
       "source": 40, 
@@ -3115,7 +3052,7 @@
     {
       "source": 40, 
       "type": "common", 
-      "target": 72, 
+      "target": 70, 
       "weight": 1
     }, 
     {
@@ -3156,13 +3093,13 @@
     {
       "source": 42, 
       "type": "common", 
-      "target": 68, 
+      "target": 66, 
       "weight": 1
     }, 
     {
       "source": 42, 
       "type": "common", 
-      "target": 72, 
+      "target": 70, 
       "weight": 1
     }, 
     {
@@ -3198,7 +3135,7 @@
     {
       "source": 44, 
       "type": "common", 
-      "target": 69, 
+      "target": 67, 
       "weight": 3
     }, 
     {
@@ -3240,7 +3177,7 @@
     {
       "source": 44, 
       "type": "common", 
-      "target": 68, 
+      "target": 66, 
       "weight": 1
     }, 
     {
@@ -3252,20 +3189,14 @@
     {
       "source": 44, 
       "type": "common", 
-      "target": 72, 
+      "target": 70, 
       "weight": 1
     }, 
     {
       "source": 44, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 2
-    }, 
-    {
-      "source": 45, 
-      "type": "common", 
-      "target": 67, 
-      "weight": 1
     }, 
     {
       "source": 45, 
@@ -3329,19 +3260,19 @@
     {
       "source": 47, 
       "type": "common", 
-      "target": 74, 
-      "weight": 1
-    }, 
-    {
-      "source": 48, 
-      "type": "common", 
       "target": 72, 
       "weight": 1
     }, 
     {
       "source": 48, 
       "type": "common", 
-      "target": 74, 
+      "target": 70, 
+      "weight": 1
+    }, 
+    {
+      "source": 48, 
+      "type": "common", 
+      "target": 72, 
       "weight": 1
     }, 
     {
@@ -3393,7 +3324,7 @@
     {
       "source": 51, 
       "type": "common", 
-      "target": 71, 
+      "target": 69, 
       "weight": 1
     }, 
     {
@@ -3461,13 +3392,7 @@
     {
       "source": 56, 
       "type": "theme", 
-      "target": 71
-    }, 
-    {
-      "source": 57, 
-      "type": "common", 
-      "target": 66, 
-      "weight": 2
+      "target": 69
     }, 
     {
       "source": 57, 
@@ -3496,13 +3421,13 @@
     {
       "source": 59, 
       "type": "common", 
-      "target": 71, 
+      "target": 69, 
       "weight": 1
     }, 
     {
       "source": 60, 
       "type": "common", 
-      "target": 72, 
+      "target": 70, 
       "weight": 1
     }, 
     {
@@ -3520,19 +3445,19 @@
     {
       "source": 60, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
       "source": 61, 
       "type": "common", 
-      "target": 68, 
+      "target": 66, 
       "weight": 1
     }, 
     {
       "source": 61, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 4
     }, 
     {
@@ -3556,29 +3481,17 @@
     {
       "source": 61, 
       "type": "common", 
-      "target": 66, 
-      "weight": 2
-    }, 
-    {
-      "source": 61, 
-      "type": "common", 
-      "target": 69, 
+      "target": 67, 
       "weight": 1
     }, 
     {
       "source": 61, 
       "type": "common", 
-      "target": 70, 
+      "target": 68, 
       "weight": 4
     }, 
     {
       "source": 61, 
-      "type": "common", 
-      "target": 73, 
-      "weight": 1
-    }, 
-    {
-      "source": 62, 
       "type": "common", 
       "target": 71, 
       "weight": 1
@@ -3586,7 +3499,13 @@
     {
       "source": 62, 
       "type": "common", 
-      "target": 72, 
+      "target": 69, 
+      "weight": 1
+    }, 
+    {
+      "source": 62, 
+      "type": "common", 
+      "target": 70, 
       "weight": 1
     }, 
     {
@@ -3598,37 +3517,31 @@
     {
       "source": 64, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
       "source": 65, 
       "type": "common", 
-      "target": 67, 
+      "target": 72, 
       "weight": 1
     }, 
     {
-      "source": 65, 
+      "source": 66, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
-      "source": 68, 
+      "source": 67, 
       "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }, 
     {
-      "source": 69, 
+      "source": 70, 
       "type": "common", 
-      "target": 74, 
-      "weight": 1
-    }, 
-    {
-      "source": 72, 
-      "type": "common", 
-      "target": 74, 
+      "target": 72, 
       "weight": 1
     }
   ], 

@@ -21,46 +21,27 @@
       text-align: center;
 		}
 
+		.label text {
+      fill: #666;
+      font-family: 'Oswald', sans-serif;
+    }
+
     .node text {
       fill: #111;
       cursor: pointer;
       font-family: 'Oswald', sans-serif;
     }
 
-    .node.theme text {
-      fill: #ddd;
-      font-size: 20px;
-    }
-
     .node.setting text {
-      /*
-      fill: #006cb3;
-      */
       font-weight: 300;
     }
 
     .node.incident text {
-      /*
-      fill: #333;
-	  */
-	  font-weight: 400;
+      font-weight: 400;
     }
 
     .node.reaction text {
-      /*
-      fill: #b9204b;
-      */
       font-weight: 700;
-    }
-
-    .link {
-      opacity: 0;
-      stroke: black;
-      fill: transparent;
-    }
-
-    .link.theme {
-      visibility: hidden;
     }
 	</style>
 </head>
@@ -68,152 +49,161 @@
 	<h1>Threads in the Stories</h1>
 	<div id='vis'></div>
 
-	<script src="node_modules/d3/build/d3.js"></script>
+	<script src="lib/d3.min.js"></script>
 	<script>
 		var e = document.documentElement,
     		g = document.getElementsByTagName('body')[0],
-			  winWidth = window.innerWidth || e.clientWidth || g.clientWidth,
+    		fontHeight = 38,
+    		fontMargin = fontHeight * 0.40,
+    		lineHeight = fontHeight + fontMargin,
+    		topOffset = 100,
+				winWidth = window.innerWidth || e.clientWidth || g.clientWidth,
     		winHeight = window.innerHeight|| e.clientHeight|| g.clientHeight,
     		visWidth = winWidth,
     		visHeight = winHeight * 0.9,
         marginWidth = visWidth * 0.05;
 
-    var themes = ['setting', 'incident', 'reaction'],
+    var themeNames = ['setting', 'incident', 'reaction'],
         themeLine = visHeight / 2,
         themeUnit = (visWidth - (marginWidth * 7)) / 2;
 
   	var svg = d3.select("#vis").append("svg")
-  		.attr("width", visWidth)
-  		.attr("height", visHeight);
+  		.attr("width", visWidth);
 
-  	var opaScale = d3.scaleLinear()
+  	var countScale = d3.scaleLog()
         .range([0.3, 1]);
-
-    var simulation = d3.forceSimulation()
-      .force("link", d3.forceLink())
-      // .force("positionx", d3.forceX().strength(0.8).x(function(d) {
-      //   return marginWidth + themes.indexOf(d.theme) * themeUnit;
-      // }))
-      .force("positiony", d3.forceY().strength(0.1).y(function(d) {
-        return themeLine;
-      }))
-      .force("collide", d3.forceCollide(40).strength(0.9))
 
     d3.json("graph.json", function(error, graph) {
       if (error) throw error;
-      console.log(graph);
-      // fontScale.domain(d3.extent(graph.nodes, function(n) {
-      //   n.count = n.cases ? n.cases.length : 0;
-      //   return n.count;
-      // }));
-      
-      var link = svg.append("g")
-          .attr("class", "links")
-        .selectAll("path")
-        .data(graph.links)
-        .enter().append("path")
-          .classed("link", true)
-          .classed("theme", function(d) { return d.type == 'theme'; })
-          .attr("stroke-width", function(d) {
-            // return Math.sqrt((d.weight || 0) + 1);
-            return Math.sqrt((d.weight || 0) + 1);
+      // console.log(graph);
+      var themes = {};
+      var nodes = graph.nodes.filter(function(n) {
+      	if (themeNames.indexOf(n.theme) == -1) {
+      		return false;
+      	}
+      	if (!themes[n.theme]) {
+      		themes[n.theme] = [];
+      	}
+      	n.count = n.cases.length;
+      	n.linked = [];
+      	n.stacks = {};
+      	for (i in graph.links) {
+      		var link = graph.links[i],
+      				source = graph.nodes[link.source],
+      				target = graph.nodes[link.target];
+
+      		if (source.id == n.id && target.theme && target.theme != n.theme) {
+      			n.linked.push(target.id);
+ 						n.stacks[target.theme] = n.stacks[target.theme] ? n.stacks[target.theme] + 1 : 1;
+      		}
+      		if (target.id == n.id && source.theme && source.theme != n.theme) {
+      			n.linked.push(source.id);
+      			n.stacks[t] = n.stacks[t] ? n.stacks[t] + 1 : 1;
+      		}
+      	}
+      	themes[n.theme].push(n);
+      	return true;
+      });
+      // console.log(themes);
+
+      countScale.domain(d3.extent(nodes, function(n) { return n.count; }));
+
+      var columnMax = 0;
+      for (var t in themes) {
+      	var name = themes[t];
+      	columnMax = Math.max(columnMax, themes[t].length);
+      }
+      svg.attr('height', topOffset + (columnMax * lineHeight));
+
+      var label = svg.append("g")
+          .attr("class", "labels")
+        .selectAll("g")
+        .data(themeNames)
+        .enter().append("g")
+          .classed("label", true)
+          .attr("transform", function(d, i) {
+          	var x = marginWidth + (i * themeUnit);
+            var y = 100 - (lineHeight);
+            return 'translate(' + [x, y] + ')';
           });
+
+      label.append("text")
+        .attr("text-anchor", "left")
+        .text(function(d) {
+        	return d.toUpperCase();
+        })
+        .style("font-size", fontHeight / 2);
 
       var node = svg.append("g")
           .attr("class", "nodes")
         .selectAll("g")
-        .data(graph.nodes)
+        .data(nodes)
         .enter().append("g")
           .classed("node", true)
-          .classed("phrase", function(d) { return d.type == 'phrase'; })
-          .classed("theme", function(d) { return d.type == 'theme'; })
           .classed("setting", function(d) { return d.theme == 'setting'; })
           .classed("incident", function(d) { return d.theme == 'incident'; })
           .classed("reaction", function(d) { return d.theme == 'reaction'; })
           .attr("transform", function(d) {
-            d.x = 0, d.y = 0;
-            if (d.type == 'theme') {
-              d.y = d.fy = themeLine;
-              d.x = d.fx = marginWidth + themes.indexOf(d.id) * themeUnit;
-            } else {
-              d.x = d.fx = marginWidth + themes.indexOf(d.theme) * themeUnit;
-            }
+            d.x = marginWidth + (themeNames.indexOf(d.theme) * themeUnit);
+            d.y = topOffset + themes[d.theme].indexOf(d) * lineHeight;
             return 'translate(' + [d.x, d.y] + ')';
-          })
-          .style('font-size', '38px');
+          });
+
+      node.style("opacity", 0)
+      		.transition()
+      		.duration(function(d) {
+      			return Math.random() * 1000 + 100;
+      		})
+      		.delay(function(d) {
+      			return Math.random() * 4000 + 0;
+      		})
+      		.style("opacity", function(d) {
+        		return countScale(d.count);
+      		});
 
       node.append("text")
         .attr("class", "title")
         .attr("text-anchor", "left")
-        .style("opacity", 0)
-        .text(function(d) {
+        .style("opacity", 1)
+        .text(function(d){
         	var label = d.label || d.id;
         	return label.toUpperCase();
         })
-        .transition().duration(2000)
-        .style("opacity", 1);
+        .style("font-size", fontHeight);
 
       node.on('mouseover', function(d) {
-        // console.log(d);
-        link.transition().duration(600).style('opacity', function(l) {
-          if (l.source.theme != l.target.theme) {
-            if (l.source.id == d.id || l.target.id == d.id) {
-              return 0.1;
-            }
-          }
-          return 0;
-        });
+      	// get connected nodes.
+      	// console.log(d);
+      	var offsets = {};
+      	for (var i in themeNames) {
+      		var theme = themeNames[i];
+      		offsets[theme] = d.y;
+      	}
 
-        node.transition().duration(400).style('opacity', function(n) {
-          if (n.id == d.id) {
-            return 1;
-          }
-          for (var i in graph.links) {
-            var l = graph.links[i];
-            if (l.source.theme != l.target.theme) {
-              if (l.source.id == d.id && l.target.id == n.id) {
-                return 1;
-              }
-              if (l.target.id == d.id && l.source.id == n.id) {
-                return 1;
-              }  
-            }
-            
-          }
-          return 0.2;
-        });
+      	node
+     			// .transition()
+     			// .duration(100)
+     			.attr("transform", function(n) {
+     				if (n.theme != d.theme) {
+     					if (d.linked.indexOf(n.id) == -1) {
+     						return 'translate(' + [n.x, n.y] + ') scale(1, 0)';
+     					}
+     					var offset = offsets[n.theme];
+     					offsets[n.theme] = offset + lineHeight;
+     					return 'translate(' + [n.x, offset] + ')';
+     				}
+     				return 'translate(' + [n.x, n.y] + ')';
+     			});
       });
 
       node.on('mouseout', function(d) {
-        link.style('opacity', 0);
-        node.style('opacity', 1);
+      	node
+     			// .transition()
+     			// .duration(100)
+     			.attr("transform", function(n) {
+     				return 'translate(' + [n.x, n.y] + ')';
+     			});
       });
-
-      node.on('click', function(d) {
-        console.log(d);
-      });
-
-      simulation
-          .nodes(graph.nodes)
-          .on("tick", ticked);
-
-      simulation.force("link")
-          .links(graph.links);
-
-      function ticked() {
-        link.attr("d", function(d) {
-            var dx = d.target.x - d.source.x,
-                dy = d.target.y - d.source.y,
-                dr = Math.sqrt(dx * dx + dy * dy);
-            return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
-        });
-
-
-        node.attr("transform", function(d) {
-          return 'translate(' + [d.x, d.y] + ')';
-        });
-      }
-
     });
 	</script>
 </body>
