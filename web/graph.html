@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>HarassMap Data Visualisation</title>
+  <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500" rel="stylesheet">
+	<style>
+		/*
+		hm-red: #ba1e43 
+		hm-blue: #228bbb
+		*/
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #fff;
+			font-family: 'Oswald', sans-serif;
+		}
+
+		h1 {
+			font-family: 'Oswald', sans-serif;
+			font-weight: 500;
+      text-align: center;
+		}
+
+    .node text {
+      fill: #111;
+      cursor: pointer;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .node.theme text {
+      fill: #eee;
+      font-size: 20px;
+    }
+
+    .node.setting text {
+      fill: #333;
+    }
+
+    .node.incident text {
+      fill: #b9204b;
+    }
+
+    .node.reaction text {
+      fill: #ffc906;
+    }
+
+    .link {
+      opacity: 0;
+      stroke: black;
+      fill: transparent;
+    }
+
+    .link.theme {
+      visibility: hidden;
+    }
+	</style>
+</head>
+<body>
+	<h1>Threads in the Stories</h1>
+	<div id='vis'></div>
+
+	<script src="node_modules/d3/build/d3.js"></script>
+	<script>
+		var e = document.documentElement,
+    		g = document.getElementsByTagName('body')[0],
+			  winWidth = window.innerWidth || e.clientWidth || g.clientWidth,
+    		winHeight = window.innerHeight|| e.clientHeight|| g.clientHeight,
+    		visWidth = winWidth,
+    		visHeight = winHeight * 0.9,
+        marginWidth = visWidth * 0.1;
+
+    var themes = ['setting', 'incident', 'reaction'],
+        themeLine = visHeight / 2,
+        themeUnit = (visWidth - (marginWidth * 2)) / 2;
+
+  	var svg = d3.select("#vis").append("svg")
+  		.attr("width", visWidth)
+  		.attr("height", visHeight);
+
+    var fontScale = d3.scaleLinear()
+      .range([12, 20]);
+
+    var simulation = d3.forceSimulation()
+      .force("link", d3.forceLink())
+      .force("positionx", d3.forceX().strength(0.8).x(function(d) {
+        return marginWidth + themes.indexOf(d.theme) * themeUnit;
+      }))
+      .force("positiony", d3.forceY().strength(0.1).y(function(d) {
+        return themeLine;
+      }))
+      .force("collide", d3.forceCollide(40).strength(0.9))
+
+    d3.json("graph.json", function(error, graph) {
+      if (error) throw error;
+      console.log(graph);
+      fontScale.domain(d3.extent(graph.nodes, function(n) {
+        n.count = n.cases ? n.cases.length : 0;
+        return n.count;
+      }));
+      
+      var link = svg.append("g")
+          .attr("class", "links")
+        .selectAll("path")
+        .data(graph.links)
+        .enter().append("path")
+          .classed("link", true)
+          .classed("theme", function(d) { return d.type == 'theme'; })
+          .attr("stroke-width", function(d) {
+            // return Math.sqrt((d.weight || 0) + 1);
+            return Math.sqrt((d.weight || 0) + 1);
+          });
+
+      var node = svg.append("g")
+          .attr("class", "nodes")
+        .selectAll("g")
+        .data(graph.nodes)
+        .enter().append("g")
+          .classed("node", true)
+          .classed("phrase", function(d) { return d.type == 'phrase'; })
+          .classed("theme", function(d) { return d.type == 'theme'; })
+          .classed("setting", function(d) { return d.theme == 'setting'; })
+          .classed("incident", function(d) { return d.theme == 'incident'; })
+          .classed("reaction", function(d) { return d.theme == 'reaction'; })
+          .attr("transform", function(d) {
+            d.x = 0, d.y = 0;
+            if (d.type == 'theme') {
+              d.y = d.fy = themeLine;
+              d.x = d.fx = marginWidth + themes.indexOf(d.id) * themeUnit;
+            }
+            return 'translate(' + [d.x, d.y] + ')';
+          })
+          .style('font-size', function(d) {
+            return fontScale(d.count);
+          });
+
+      node.append("text")
+        .attr("class", "title")
+        .attr("text-anchor", "middle")
+        .style("opacity", 0)
+        .text(function(d){ return d.label || d.id; })
+        .transition().duration(2000)
+        .style("opacity", 1);
+
+      node.on('mouseover', function(d) {
+        // console.log(d);
+        link.transition().duration(600).style('opacity', function(l) {
+          if (l.source.id == d.id || l.target.id == d.id) {
+            return 0.2;
+          }
+          return 0;
+        });
+
+        node.transition().duration(400).style('opacity', function(n) {
+          if (n.id == d.id) {
+            return 1;
+          }
+          for (var i in graph.links) {
+            var l = graph.links[i];
+            if (l.source.id == d.id && l.target.id == n.id) {
+              return 1;
+            }
+            if (l.target.id == d.id && l.source.id == n.id) {
+              return 1;
+            }
+          }
+          return 0.2;
+        });
+      });
+
+      node.on('mouseout', function(d) {
+        link.style('opacity', 0);
+        node.style('opacity', 1);
+      });
+
+      simulation
+          .nodes(graph.nodes)
+          .on("tick", ticked);
+
+      simulation.force("link")
+          .links(graph.links);
+
+      function ticked() {
+        link.attr("d", function(d) {
+            var dx = d.target.x - d.source.x,
+                dy = d.target.y - d.source.y,
+                dr = Math.sqrt(dx * dx + dy * dy);
+            return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+        });
+
+
+        node.attr("transform", function(d) {
+          return 'translate(' + [d.x, d.y] + ')';
+        });
+      }
+
+    });
+	</script>
+</body>

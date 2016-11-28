@@ -50,9 +50,9 @@ def parse():
             continue
         name = map_to or phrase
         if not G.has_node(name):
-            G.add_node(name, label=name, cases=[])
+            G.add_node(name, label=name, cases=[], type='phrase')
         if group:
-            G.node[name]['group'] = group
+            G.node[name]['theme'] = group
 
         for (p, i), cases in phrases.items():
             if p == phrase:
@@ -60,9 +60,53 @@ def parse():
                     if case not in G.node[name]['cases']:
                         G.node[name]['cases'].append(case)
 
+    G.add_node('setting', type='theme')
+    G.add_node('incident', type='theme')
+    G.add_node('reaction', type='theme')
+
+    print 'generating graph edges....'
+    for outer in G.nodes():
+        if G.node[outer]['type'] != 'phrase':
+            continue
+        otheme = G.node[outer].get('theme')
+        if otheme is None:
+            continue
+        ocases = set(G.node[outer].get('cases', []))
+        G.add_edge(outer, otheme, type='theme')
+
+        for inner in G.nodes():
+            if inner >= outer or G.node[inner]['type'] != 'phrase':
+                continue
+            icases = set(G.node[inner].get('cases', []))
+            ixcases = len(ocases.intersection(icases))
+            if ixcases:
+                G.add_edge(outer, inner, type='common', weight=ixcases)
+
     data = json_graph.node_link_data(G)
-    with open('graph.json', 'w') as fh:
+    with open('web/graph.json', 'w') as fh:
         json.dump(data, fh, indent=2)
+
+    # print 'json data....'
+    # nodes = {}
+    # for phrase, mapped in mapping.items():
+    #     map_to = mapped.get('map_to') or None
+    #     group = mapped.get('group') or None
+    #     if not map_to and not group:
+    #         continue
+    #     name = map_to or phrase
+    #     if name not in nodes:
+    #         nodes[name] = {'name': name, 'cases': []}
+    #     if group:
+    #         nodes[name]['group'] = group
+
+    #     for (p, i), cases in phrases.items():
+    #         if p == phrase:
+    #             for case in cases:
+    #                 if case not in nodes[name]['cases']:
+    #                     nodes[name]['cases'].append(case)
+
+    # with open('web/data.json', 'w') as fh:
+    #     json.dump({'nodes': nodes}, fh, indent=2)
 
 
 def report_phrases(phrases):
