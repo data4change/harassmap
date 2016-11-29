@@ -35,6 +35,10 @@
       font-family: 'Oswald', sans-serif;
     }
 
+    polygon.path {
+      fill: #f7f7f7;
+    }
+
     .node.setting text {
       font-weight: 300;
     }
@@ -68,13 +72,15 @@
 
     var themeNames = ['setting', 'incident', 'reaction'],
         themeLine = visHeight / 2,
-        themeUnit = (visWidth - (marginWidth * 7)) / 2;
+        themeUnit = (visWidth - (marginWidth * 7)) / 2, 
+        countScales = {
+          setting: d3.scaleLog().range([0.4, 1]),
+          incident: d3.scaleLog().range([0.4, 1]),
+          reaction: d3.scaleLog().range([0.4, 1])
+        };
 
   	var svg = d3.select("#vis").append("svg")
   		.attr("width", visWidth);
-
-  	var countScale = d3.scaleLog()
-        .range([0.3, 1]);
 
     d3.json("graph.json", function(error, graph) {
       if (error) throw error;
@@ -109,7 +115,9 @@
       });
       // console.log(themes);
 
-      countScale.domain(d3.extent(nodes, function(n) { return n.count; }));
+      countScales.setting.domain(d3.extent(themes.setting, function(n) { return n.count; }));
+      countScales.incident.domain(d3.extent(themes.incident, function(n) { return n.count; }));
+      countScales.reaction.domain(d3.extent(themes.reaction, function(n) { return n.count; }));
 
       var columnMax = 0;
       for (var t in themes) {
@@ -137,6 +145,8 @@
         })
         .style("font-size", fontHeight / 2);
 
+      var links = svg.append("g").attr("class", "links");
+
       var node = svg.append("g")
           .attr("class", "nodes")
         .selectAll("g")
@@ -161,10 +171,10 @@
       			return Math.random() * 4000 + 0;
       		})
       		.style("opacity", function(d) {
-        		return countScale(d.count);
+        		return countScales[d.theme](d.count);
       		});
 
-      node.append("text")
+      var nodeTexts = node.append("text")
         .attr("class", "title")
         .attr("text-anchor", "left")
         .style("opacity", 1)
@@ -177,13 +187,25 @@
       node.on('mouseover', function(d) {
       	// get connected nodes.
       	// console.log(d);
-      	var offsets = {};
+      	var offsets = {}, affected = [d];
       	for (var i in themeNames) {
       		var theme = themeNames[i];
       		offsets[theme] = d.y;
       	}
 
+        nodeTexts
+          .call(function(texts) {
+            texts.each(function(node) {
+              var text = d3.select(this).node();
+                  box = text.getBBox();
+              node.box = box;
+            });
+          });
+
       	node
+          .style("opacity", function(d) {
+            return countScales[d.theme](d.count);
+          })
      			.transition()
      			.duration(300)
      			.attr("transform", function(n) {
@@ -193,17 +215,63 @@
      					}
      					var offset = offsets[n.theme];
      					offsets[n.theme] = offset + lineHeight;
-     					return 'translate(' + [n.x, offset] + ')';
+              affected.push(n);
+              n.y = offset;
      				}
      				return 'translate(' + [n.x, n.y] + ')';
      			});
+
+        var paths = [];
+        // console.log(affected);
+        for (var i in affected) {
+          var n = affected[i];
+          for (var j in affected) {
+            var m = affected[j];
+            // console.log(m.theme, n.theme);
+            if (n.theme == 'setting' && m.theme == 'incident') {
+              paths.push({'source': n, 'target': m});
+            } else if (m.theme == 'setting' && n.theme == 'incident') {
+              paths.push({'source': m, 'target': n});
+            } else if (n.theme == 'incident' && m.theme == 'reaction') {
+              paths.push({'source': n, 'target': m});
+            } else if (m.theme == 'incident' && n.theme == 'reaction') {
+              paths.push({'source': m, 'target': n});
+            }
+          }
+        }
+
+        links
+          .selectAll("polygon")
+          .data(paths)
+          .enter().append("polygon")
+            .classed("path", true)
+            .style('fill', '#ffffff')
+            .attr('points', function(d) {
+              var startX = d.source.x + d.source.box.width + 10,
+                  endX = d.target.x - 10,
+                  startY = d.source.y + 3 - fontHeight,
+                  endY = d.target.y + 3 - fontHeight;
+              var points = [
+                [startX, startY].join(','),
+                [startX, startY + fontHeight].join(','),
+                [endX, endY + fontHeight].join(','),
+                [endX, endY].join(',')
+              ];
+              return points.join(' ');
+            })
+            .transition()
+            .duration(500)
+            .style('fill', '#f7f7f7');
       });
 
       node.on('mouseout', function(d) {
+        links.selectAll("polygon").remove();
       	node
-     			// .transition()
-     			// .duration(100)
+          .style("opacity", function(d) {
+            return countScales[d.theme](d.count);
+          })
      			.attr("transform", function(n) {
+            n.y = topOffset + themes[n.theme].indexOf(n) * lineHeight;
      				return 'translate(' + [n.x, n.y] + ')';
      			});
       });
